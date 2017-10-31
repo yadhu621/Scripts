@@ -33,6 +33,10 @@ Pause 10
 Start-Process msiexec -ArgumentList @('/qn','/i C:\awscli.msi') -Wait
 Log("Successfully installed AWS CLI.")
 
+### Reloading a new powershell session to source AWS installation
+.$profile
+Pause 10
+
 ### Create a chef directory
 Log("Creating an empty 'chef' directory........")
 $folder = 'C:\chef'
