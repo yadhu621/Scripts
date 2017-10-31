@@ -1,4 +1,13 @@
 
+### Install aws cli
+$location = 'C:\awscli.msi'
+$URL = 'https://s3.amazonaws.com/aws-cli/AWSCLI64.msi'
+
+if (-Not (Test-Path $location)){
+    Invoke-WebRequest -Uri $URL -OutFile $location
+}
+Start-Process msiexec -ArgumentList @('/qn','/i C:\awscli.msi')
+
 
 ### Create a chef directory
 Write-Output "Creating an empty 'chef' directory........"
@@ -9,7 +18,6 @@ if (-Not (Test-Path -Path $folder)){
 Write-Output "C:\chef folder created."
 
 
-
 Write-Output "Downloading the chef-client installable from the internet........"
 ### Download the chef-client installable
 $chef_client_URL = "https://packages.chef.io/files/stable/chef/13.6.0/windows/2016/chef-client-13.6.0-1-x64.msi" 
@@ -17,10 +25,12 @@ $outfile = "C:\chef-client.msi"
 Invoke-WebRequest -Uri $chef_client_URL -OutFile $outfile
 Write-Output "Chef-client downloaded."
 
+
 ### Install chef-client
 Write-Output "Starting installation of chef-client........"
 Start-Process msiexec.exe -ArgumentList @('/qn','/lv C:\Windows\Temp\chef-log.txt','/i C:\chef-client.msi','ADDLOCAL="ChefClientFeature,ChefSchTaskFeature,ChefPSModuleFeature"') -Wait
 Write-Output "Chef-client installation completed."
+
 
 ### Create a firstboot.json file
 Write-Output "Creating a first-boot json file for the first chef-client run........"
@@ -29,6 +39,7 @@ $firstboot = @{
 } 
 Set-Content -Path "C:\chef\first-boot.json" -Value ($firstboot | ConvertTo-Json)
 Write-Output "Completed, first-boot.json file created and placed at C:\chef."
+
 
 ### Find the node name of the server
 Write-Output "Finding the name of the node........"
@@ -40,6 +51,7 @@ $name_tag = $tags_array | Where-Object {$_.Key -eq "Name"}
 $node_name = $name_tag.Value.ToLower()
 Write-Output "The Node name is {0} ........" -f $node_name
 
+
 ### Create a client.rb file
 Write-Output "Creating the client.rb file........"
 $clientrb = @"
@@ -50,6 +62,7 @@ node_name                   '{0}'
 "@ -f $node_name
 Set-Content -Path 'C:\chef\client.rb' -Value $clientrb
 Write-Output "Completed, client.rb file created and placed at C:\chef."
+
 
 ### Place validator.pem and chef-server.crt files 
 Write-Output "Placing the required validator pem file and server SSL certificate........"
