@@ -75,7 +75,7 @@ Pause 5
 $tags_array = ($tags | ConvertFrom-Json).tags
 $name_tag = $tags_array | Where-Object {$_.Key -eq "Name"}
 $node_name = $name_tag.Value.ToLower()
-Log("The Node name is {0} ........") -f $node_name
+Log("The node name is " + $node_name)
 
 
 ### Create a client.rb file
