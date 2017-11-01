@@ -98,7 +98,7 @@ Log("Completed, client.rb file created and placed at C:\chef.")
 Log("Placing the required validator pem file and server SSL certificate........")
 $validator_pem_file_local = 'C:\chef\rwest-validator.pem'
 $validator_pem_file_s3 ='s3://oracle621/chef/rwest-validator.pem'
-if (-Not (Test-Path -Path $validator_pem_file)){
+if (-Not (Test-Path -Path $validator_pem_file_local)){
     aws s3 cp $validator_pem_file_s3 $validator_pem_file_local
     Pause 5
 }
@@ -113,7 +113,7 @@ Log("C:\chef\trusted_certs folder created.")
 
 $certificate_local = 'C:\chef\trusted_certs\ip-10-0-1-160_eu-west-2_compute_internal.crt'
 $certificate_s3 = 's3://oracle621/chef/ip-10-0-1-160_eu-west-2_compute_internal.crt'
-if (-Not (Test-Path -Path $certificate)){
+if (-Not (Test-Path -Path $certificate_local)){
     aws s3 cp $certificate_s3 $certificate_local 
     Pause 5
 }
