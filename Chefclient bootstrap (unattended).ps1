@@ -33,9 +33,9 @@ Pause 10
 Start-Process msiexec -ArgumentList @('/qn','/i C:\awscli.msi') -Wait
 Log("Successfully installed AWS CLI.")
 
-### Reloading a new powershell session to source AWS installation
-.$profile
-Pause 10
+### Reloading a $env:PATH to source AWS installation path
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
 
 ### Create a chef directory
 Log("Creating an empty 'chef' directory........")
@@ -121,5 +121,6 @@ Log("Completed, chef-server .crtfile placed at C:\chef\trusted_certs.")
 
 
 ### Run chef-client
-Log("Chef-Client now taking over........")
+Log("Chef-Client now taking over to run chef-client for the first time........")
 C:\opscode\chef\bin\chef-client.bat -j C:\chef\first-boot.json
+Log("Chef-Client run completed.")
